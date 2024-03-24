@@ -1,20 +1,19 @@
 FROM busybox:latest AS downloader
 ADD https://github.com/iptv-org/epg/archive/refs/heads/master.zip /tmp/master.zip
 RUN mkdir -p /usr/src/app && \
-    unzip /tmp/master.zip -d /tmp && \
-    touch /tmp/epg-master/custom_channels.xml && \
-    mkdir -m 777 /tmp/epg-master/output
+    unzip /tmp/master.zip -d /tmp
 
 
-FROM node:21-alpine
+FROM node:alpine
 
-ENV EPG_DIR=/opt/iptv-epg
-WORKDIR ${EPG_DIR}
-ENTRYPOINT ["/start.sh"]
-CMD ["default"]
+# configuration layer
+WORKDIR /opt/epg
+ENTRYPOINT ["npm", "run", "grab", "--"]
 
-RUN apk add --no-cache su-exec
-COPY start.sh /start.sh
+# dependency layer
+COPY --from=downloader /tmp/epg-master/scripts ./scripts
+COPY --from=downloader /tmp/epg-master/package*.json ./
+RUN npm install --omit=dev
 
+# application layer
 COPY --from=downloader /tmp/epg-master ./
-RUN npm --prefix ./ install
