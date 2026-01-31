@@ -1,0 +1,22 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:recommended",
+        ":configMigration",
+        "github>seiferma/renovate-selfhosted:preset-docker2"
+    ],
+    "dependencyDashboard": false,
+    "customManagers": [
+        {
+            "customType": "regex",
+            "fileMatch": ["^docker-bake.hcl$"],
+            "matchStrings": [
+                "default = \"(?<currentDigest>.*?)\"\\n"
+            ],
+            "currentValueTemplate": "master",
+            "depNameTemplate": "iptv-epg",
+            "packageNameTemplate": "https://github.com/iptv-org/epg",
+            "datasourceTemplate": "git-refs"
+        }
+    ]
+}

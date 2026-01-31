@@ -1,9 +1,11 @@
 # syntax=docker/dockerfile:1.7-labs
 FROM node:24-alpine AS builder
-ADD https://github.com/iptv-org/epg/archive/refs/heads/master.zip /tmp/master.zip
-RUN mkdir -p /usr/src/app && \
-    unzip /tmp/master.zip -d /tmp
-WORKDIR /tmp/epg-master
+ARG IPTV_HASH
+
+RUN apk add --no-cache git ca-certificates
+RUN git clone https://github.com/iptv-org/epg.git /tmp/epg
+WORKDIR /tmp/epg
+RUN git checkout $IPTV_HASH
 RUN npm install --omit=dev
 
 
@@ -14,7 +16,7 @@ WORKDIR /opt/epg
 ENTRYPOINT ["npm", "run", "grab", "--"]
 
 # dependency layer
-COPY --from=builder /tmp/epg-master/node_modules ./node_modules
+COPY --from=builder /tmp/epg/node_modules ./node_modules
 
 # application layer
-COPY --from=builder --exclude=/tmp/epg-master/node_modules /tmp/epg-master ./
+COPY --from=builder --exclude=/tmp/epg/node_modules --exclude=/tmp/epg/.git /tmp/epg ./
