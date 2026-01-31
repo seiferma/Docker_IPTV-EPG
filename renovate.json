@@ -9,7 +9,9 @@
     "customManagers": [
         {
             "customType": "regex",
-            "fileMatch": ["^docker-bake.hcl$"],
+            "managerFilePatterns": [
+                "/^docker-bake.hcl$/"
+            ],
             "matchStrings": [
                 "default = \"(?<currentDigest>.*?)\"\\n"
             ],
