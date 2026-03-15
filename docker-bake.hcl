@@ -1,5 +1,5 @@
 variable "IPTV_HASH" {
-  default = "e4f92bb2a2768dcba3dbbd52b19d78d96bebc31e"
+  default = "283c87ba8085eb54cbd2d22c0fa508ae221dc780"
 }
 
 group "default" {
