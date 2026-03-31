@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.22-labs
+# syntax=docker/dockerfile:1.23-labs
 FROM node:24-alpine AS builder
 ARG IPTV_HASH
 
